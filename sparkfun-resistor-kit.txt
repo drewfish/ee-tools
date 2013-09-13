@@ -1,0 +1,9 @@
+### configuration
+tolerance-color=Gd
+
+### values
+0, 1.5, 4.7, 10, 47
+100, 220, 330, 470, 680
+1k, 2.2k, 3.3k, 4.7k, 10k
+22k, 47k, 100k, 330k, 1M
+
