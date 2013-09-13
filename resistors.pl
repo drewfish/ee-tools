@@ -1,9 +1,11 @@
 #!/usr/bin/env perl
 # 
 # TODO
+#   special envelope templates for special values (i.e. 0ohms)
 #   color key
 #   instructions
 #   test symbols
+#   understand other value formats
 #
 # FUTURE
 #   configurable bar size
@@ -524,45 +526,47 @@ main(@ARGV);
 __DATA__
 ======================================================================
 ====================================================================== ENVELOPE
-    <!-- envelope {{ix}},{{iy}} {{value}} {{tolerance}}% {{color-digit0}}{{color-digit1}}{{color-multiplier}}{{color-tolerance}} -->
-    <use x="{{=leaf1-W + fold-width +  0}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-digit0}}" />
-    <use x="{{=leaf1-W + fold-width + 10}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-digit1}}" />
-    <use x="{{=leaf1-W + fold-width + 20}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-multiplier}}" />
-    <use x="{{=leaf1-W + fold-width + 35}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-tolerance}}" />
-    <use x="{{=leaf1-E - fold-width -  0}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-digit0}}" />
-    <use x="{{=leaf1-E - fold-width - 10}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-digit1}}" />
-    <use x="{{=leaf1-E - fold-width - 20}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-multiplier}}" />
-    <use x="{{=leaf1-E - fold-width - 35}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-tolerance}}" />
-    <use x="{{=leaf2-W + fold-width +  0}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-digit0}}" />
-    <use x="{{=leaf2-W + fold-width + 10}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-digit1}}" />
-    <use x="{{=leaf2-W + fold-width + 20}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-multiplier}}" />
-    <use x="{{=leaf2-W + fold-width + 35}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-tolerance}}" />
-    <use x="{{=leaf2-E - fold-width -  0}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-digit0}}" />
-    <use x="{{=leaf2-E - fold-width - 10}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-digit1}}" />
-    <use x="{{=leaf2-E - fold-width - 20}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-multiplier}}" />
-    <use x="{{=leaf2-E - fold-width - 35}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-tolerance}}" />
-    <use x="{{=leaf1-W - 15}}" y="{{=leaf1-cy - 20}}" xlink:href="#hbar-{{color-tolerance}}" />
-    <use x="{{=leaf1-W - 15}}" y="{{=leaf1-cy -  5}}" xlink:href="#hbar-{{color-multiplier}}" />
-    <use x="{{=leaf1-W - 15}}" y="{{=leaf1-cy +  5}}" xlink:href="#hbar-{{color-digit1}}" />
-    <use x="{{=leaf1-W - 15}}" y="{{=leaf1-cy + 15}}" xlink:href="#hbar-{{color-digit0}}" />
-    <use x="{{=leaf1-E - 15}}" y="{{=leaf1-cy - 20}}" xlink:href="#hbar-{{color-tolerance}}" />
-    <use x="{{=leaf1-E - 15}}" y="{{=leaf1-cy -  5}}" xlink:href="#hbar-{{color-multiplier}}" />
-    <use x="{{=leaf1-E - 15}}" y="{{=leaf1-cy +  5}}" xlink:href="#hbar-{{color-digit1}}" />
-    <use x="{{=leaf1-E - 15}}" y="{{=leaf1-cy + 15}}" xlink:href="#hbar-{{color-digit0}}" />
-    <use x="{{=leaf2-W - 15}}" y="{{=leaf2-cy - 20}}" xlink:href="#hbar-{{color-digit0}}" />
-    <use x="{{=leaf2-W - 15}}" y="{{=leaf2-cy - 10}}" xlink:href="#hbar-{{color-digit1}}" />
-    <use x="{{=leaf2-W - 15}}" y="{{=leaf2-cy +  0}}" xlink:href="#hbar-{{color-multiplier}}" />
-    <use x="{{=leaf2-W - 15}}" y="{{=leaf2-cy + 15}}" xlink:href="#hbar-{{color-tolerance}}" />
-    <use x="{{=leaf2-E - 15}}" y="{{=leaf2-cy - 20}}" xlink:href="#hbar-{{color-digit0}}" />
-    <use x="{{=leaf2-E - 15}}" y="{{=leaf2-cy - 10}}" xlink:href="#hbar-{{color-digit1}}" />
-    <use x="{{=leaf2-E - 15}}" y="{{=leaf2-cy +  0}}" xlink:href="#hbar-{{color-multiplier}}" />
-    <use x="{{=leaf2-E - 15}}" y="{{=leaf2-cy + 15}}" xlink:href="#hbar-{{color-tolerance}}" />
-    <text x="{{leaf1-cx}}" y="{{=leaf1-cy + 10}}" font-size="24pt" transform="rotate(180 {{leaf1-cx}},{{leaf1-cy}})">{{value}}<tspan font-size="12pt">Ω {{tolerance}}%</tspan></text>
-    <text x="{{leaf2-cx}}" y="{{=leaf2-cy + 10}}" font-size="24pt">{{value}}<tspan font-size="12pt">Ω {{tolerance}}%</tspan></text>
-    <use x="{{=leaf0-cx - 70}}" y="{{=leaf0-cy - 15}}" xlink:href="#digit-{{color-digit0}}" />
-    <use x="{{=leaf0-cx - 35}}" y="{{=leaf0-cy - 15}}" xlink:href="#digit-{{color-digit1}}" />
-    <use x="{{=leaf0-cx +  0}}" y="{{=leaf0-cy - 15}}" xlink:href="#multiplier-{{color-multiplier}}" />
-    <use x="{{=leaf0-cx + 40}}" y="{{=leaf0-cy - 15}}" xlink:href="#tolerance-{{color-tolerance}}" />
+    <!-- envelope {{value}} {{tolerance}}% {{color-digit0}}{{color-digit1}}{{color-multiplier}}{{color-tolerance}} -->
+    <g id="envelope-{{ix}}-{{iy}}">
+        <use x="{{=leaf1-W + fold-width +  0}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-digit0}}" />
+        <use x="{{=leaf1-W + fold-width + 10}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-digit1}}" />
+        <use x="{{=leaf1-W + fold-width + 20}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-multiplier}}" />
+        <use x="{{=leaf1-W + fold-width + 35}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-tolerance}}" />
+        <use x="{{=leaf1-E - fold-width -  0}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-digit0}}" />
+        <use x="{{=leaf1-E - fold-width - 10}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-digit1}}" />
+        <use x="{{=leaf1-E - fold-width - 20}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-multiplier}}" />
+        <use x="{{=leaf1-E - fold-width - 35}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-tolerance}}" />
+        <use x="{{=leaf2-W + fold-width +  0}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-digit0}}" />
+        <use x="{{=leaf2-W + fold-width + 10}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-digit1}}" />
+        <use x="{{=leaf2-W + fold-width + 20}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-multiplier}}" />
+        <use x="{{=leaf2-W + fold-width + 35}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-tolerance}}" />
+        <use x="{{=leaf2-E - fold-width -  0}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-digit0}}" />
+        <use x="{{=leaf2-E - fold-width - 10}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-digit1}}" />
+        <use x="{{=leaf2-E - fold-width - 20}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-multiplier}}" />
+        <use x="{{=leaf2-E - fold-width - 35}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-{{color-tolerance}}" />
+        <use x="{{=leaf1-W - 15}}" y="{{=leaf1-cy - 20}}" xlink:href="#hbar-{{color-tolerance}}" />
+        <use x="{{=leaf1-W - 15}}" y="{{=leaf1-cy -  5}}" xlink:href="#hbar-{{color-multiplier}}" />
+        <use x="{{=leaf1-W - 15}}" y="{{=leaf1-cy +  5}}" xlink:href="#hbar-{{color-digit1}}" />
+        <use x="{{=leaf1-W - 15}}" y="{{=leaf1-cy + 15}}" xlink:href="#hbar-{{color-digit0}}" />
+        <use x="{{=leaf1-E - 15}}" y="{{=leaf1-cy - 20}}" xlink:href="#hbar-{{color-tolerance}}" />
+        <use x="{{=leaf1-E - 15}}" y="{{=leaf1-cy -  5}}" xlink:href="#hbar-{{color-multiplier}}" />
+        <use x="{{=leaf1-E - 15}}" y="{{=leaf1-cy +  5}}" xlink:href="#hbar-{{color-digit1}}" />
+        <use x="{{=leaf1-E - 15}}" y="{{=leaf1-cy + 15}}" xlink:href="#hbar-{{color-digit0}}" />
+        <use x="{{=leaf2-W - 15}}" y="{{=leaf2-cy - 20}}" xlink:href="#hbar-{{color-digit0}}" />
+        <use x="{{=leaf2-W - 15}}" y="{{=leaf2-cy - 10}}" xlink:href="#hbar-{{color-digit1}}" />
+        <use x="{{=leaf2-W - 15}}" y="{{=leaf2-cy +  0}}" xlink:href="#hbar-{{color-multiplier}}" />
+        <use x="{{=leaf2-W - 15}}" y="{{=leaf2-cy + 15}}" xlink:href="#hbar-{{color-tolerance}}" />
+        <use x="{{=leaf2-E - 15}}" y="{{=leaf2-cy - 20}}" xlink:href="#hbar-{{color-digit0}}" />
+        <use x="{{=leaf2-E - 15}}" y="{{=leaf2-cy - 10}}" xlink:href="#hbar-{{color-digit1}}" />
+        <use x="{{=leaf2-E - 15}}" y="{{=leaf2-cy +  0}}" xlink:href="#hbar-{{color-multiplier}}" />
+        <use x="{{=leaf2-E - 15}}" y="{{=leaf2-cy + 15}}" xlink:href="#hbar-{{color-tolerance}}" />
+        <text x="{{leaf1-cx}}" y="{{=leaf1-cy + 10}}" font-size="24pt" transform="rotate(180 {{leaf1-cx}},{{leaf1-cy}})">{{value}}<tspan font-size="12pt">Ω {{tolerance}}%</tspan></text>
+        <text x="{{leaf2-cx}}" y="{{=leaf2-cy + 10}}" font-size="24pt">{{value}}<tspan font-size="12pt">Ω {{tolerance}}%</tspan></text>
+        <use x="{{=leaf0-cx - 70}}" y="{{=leaf0-cy - 15}}" xlink:href="#digit-{{color-digit0}}" />
+        <use x="{{=leaf0-cx - 35}}" y="{{=leaf0-cy - 15}}" xlink:href="#digit-{{color-digit1}}" />
+        <use x="{{=leaf0-cx +  0}}" y="{{=leaf0-cy - 15}}" xlink:href="#multiplier-{{color-multiplier}}" />
+        <use x="{{=leaf0-cx + 40}}" y="{{=leaf0-cy - 15}}" xlink:href="#tolerance-{{color-tolerance}}" />
+    </g>
 ====================================================================== HBAR
         <symbol id="hbar-{{color}}"><rect class="bar {{color}}" x="0" y="0" width="30" height="5" rx="2" ry="2"/></symbol>
 ====================================================================== VBAR
