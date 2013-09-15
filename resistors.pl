@@ -215,7 +215,12 @@ sub config_compute {
     $CONFIG{'envelope-height'}  ||= 3;
     $CONFIG{'envelope-width'}   ||= 4;
     $CONFIG{'fold-width'}       ||= 0.375;
-    $CONFIG{'tolerance-color'}  ||= 'Gd';
+    $CONFIG{'tolerance'}        ||= 5;  # percent
+
+    # cleanup
+    if ( $CONFIG{'tolerance'} and '%' eq substr($CONFIG{'tolerance'}, -1) ) {
+        $CONFIG{'tolerance'} = substr($CONFIG{'tolerance'}, 0, -1);
+    }
 
     # computed
     $CONFIG{'envelopes'} = scalar(@VALUES);

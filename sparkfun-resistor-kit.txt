@@ -1,5 +1,5 @@
 ### configuration
-tolerance-color=Gd
+tolerance=5%
 
 ### values
 0, 1.5, 4.7, 10, 47
