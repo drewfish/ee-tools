@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 # 
 # TODO
-#   special envelope templates for special values (i.e. 0ohms)
 #   color key
 #   instructions
 #   test symbols
@@ -457,6 +456,8 @@ sub page_render {
     foreach my $envelope ( @{$LAYOUT{'envelopes'}} ) {
         my $value = shift @values;
         next unless defined $value;
+        my $template = 'ENVELOPE';
+        $template = "ENVELOPE VALUE $value" if $TEMPLATES{"ENVELOPE VALUE $value"};
         my $colors = value_to_colors($value);
         %data = %$envelope;
         $data{'fold-width'} = $LAYOUT{'fold-width'};
@@ -466,7 +467,7 @@ sub page_render {
         $data{'color-digit0'} = $colors->[0];
         $data{'color-digit1'} = $colors->[1];
         $data{'color-multiplier'} = $colors->[2];
-        my $env = template_replace('ENVELOPE', \%data);
+        my $env = template_replace($template, \%data);
         push @envelopes, $env;
     }
 
@@ -566,6 +567,21 @@ __DATA__
         <use x="{{=leaf0-cx - 35}}" y="{{=leaf0-cy - 15}}" xlink:href="#digit-{{color-digit1}}" />
         <use x="{{=leaf0-cx +  0}}" y="{{=leaf0-cy - 15}}" xlink:href="#multiplier-{{color-multiplier}}" />
         <use x="{{=leaf0-cx + 40}}" y="{{=leaf0-cy - 15}}" xlink:href="#tolerance-{{color-tolerance}}" />
+    </g>
+====================================================================== ENVELOPE VALUE 0
+    <!-- envelope {{value}} Bk -->
+    <g id="envelope-{{ix}}-{{iy}}">
+        <use x="{{=leaf1-W + fold-width +  0}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-Bk" />
+        <use x="{{=leaf1-E - fold-width -  0}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-Bk" />
+        <use x="{{=leaf2-W + fold-width +  0}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-Bk" />
+        <use x="{{=leaf2-E - fold-width -  0}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-Bk" />
+        <use x="{{=leaf1-W - 15}}" y="{{=leaf1-cy + 0}}" xlink:href="#hbar-Bk" />
+        <use x="{{=leaf1-E - 15}}" y="{{=leaf1-cy + 0}}" xlink:href="#hbar-Bk" />
+        <use x="{{=leaf2-W - 15}}" y="{{=leaf2-cy - 0}}" xlink:href="#hbar-Bk" />
+        <use x="{{=leaf2-E - 15}}" y="{{=leaf2-cy - 0}}" xlink:href="#hbar-Bk" />
+        <text x="{{leaf1-cx}}" y="{{=leaf1-cy + 10}}" font-size="24pt" transform="rotate(180 {{leaf1-cx}},{{leaf1-cy}})">{{value}}<tspan font-size="12pt">Ω</tspan></text>
+        <text x="{{leaf2-cx}}" y="{{=leaf2-cy + 10}}" font-size="24pt">{{value}}<tspan font-size="12pt">Ω</tspan></text>
+        <use x="{{=leaf0-cx - 15}}" y="{{=leaf0-cy - 15}}" xlink:href="#digit-Bk" />
     </g>
 ====================================================================== HBAR
         <symbol id="hbar-{{color}}"><rect class="bar {{color}}" x="0" y="0" width="30" height="5" rx="2" ry="2"/></symbol>
