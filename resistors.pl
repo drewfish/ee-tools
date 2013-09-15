@@ -1,9 +1,7 @@
 #!/usr/bin/env perl
 # 
 # TODO
-#   color key
 #   instructions
-#   test symbols
 #   understand other value formats
 #
 # FUTURE
@@ -373,7 +371,10 @@ sub template_replace {
             my $v = $data->{$k} // '';
             $val =~ s/(^|\s)\Q$k\E(\s|$)/$1$v$2/gm;
         }
-        $val = eval($val) if $eval;
+        if ( $eval ) {
+            $val = eval($val);
+            print STDERR "FAILED to evaluate {{$key}}\n" if $@;
+        }
         $body =~ s/{{\Q$key\E}}/$val/g;
     }
     return $body;
@@ -457,16 +458,21 @@ sub page_render {
         my $value = shift @values;
         next unless defined $value;
         my $template = 'ENVELOPE';
-        $template = "ENVELOPE VALUE $value" if $TEMPLATES{"ENVELOPE VALUE $value"};
-        my $colors = value_to_colors($value);
         %data = %$envelope;
         $data{'fold-width'} = $LAYOUT{'fold-width'};
-        $data{'value'} = $value;
-        $data{'color-tolerance'} = $CONFIG{'tolerance-color'};
-        $data{'tolerance'} = $CONFIG{'tolerance'};
-        $data{'color-digit0'} = $colors->[0];
-        $data{'color-digit1'} = $colors->[1];
-        $data{'color-multiplier'} = $colors->[2];
+        if ( $TEMPLATES{"ENVELOPE SPECIAL $value"} ) {
+            $template = "ENVELOPE SPECIAL $value";
+        }
+        else {
+            $template = "ENVELOPE VALUE $value" if $TEMPLATES{"ENVELOPE VALUE $value"};
+            my $colors = value_to_colors($value);
+            $data{'value'} = $value;
+            $data{'tolerance'} = $CONFIG{'tolerance'};
+            $data{'color-digit0'} = $colors->[0];
+            $data{'color-digit1'} = $colors->[1];
+            $data{'color-multiplier'} = $colors->[2];
+            $data{'color-tolerance'} = $CONFIG{'tolerance-color'};
+        }
         my $env = template_replace($template, \%data);
         push @envelopes, $env;
     }
@@ -528,7 +534,7 @@ __DATA__
 ======================================================================
 ====================================================================== ENVELOPE
     <!-- envelope {{value}} {{tolerance}}% {{color-digit0}}{{color-digit1}}{{color-multiplier}}{{color-tolerance}} -->
-    <g id="envelope-{{ix}}-{{iy}}">
+    <g id="envelope-{{ix}}-{{iy}}" class="envelope">
         <use x="{{=leaf1-W + fold-width +  0}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-digit0}}" />
         <use x="{{=leaf1-W + fold-width + 10}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-digit1}}" />
         <use x="{{=leaf1-W + fold-width + 20}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-{{color-multiplier}}" />
@@ -570,7 +576,7 @@ __DATA__
     </g>
 ====================================================================== ENVELOPE VALUE 0
     <!-- envelope {{value}} Bk -->
-    <g id="envelope-{{ix}}-{{iy}}">
+    <g id="envelope-{{ix}}-{{iy}}" class="envelope">
         <use x="{{=leaf1-W + fold-width +  0}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-Bk" />
         <use x="{{=leaf1-E - fold-width -  0}}" y="{{=leaf1-N - 15}}" xlink:href="#vbar-Bk" />
         <use x="{{=leaf2-W + fold-width +  0}}" y="{{=leaf2-N - 15}}" xlink:href="#vbar-Bk" />
@@ -582,6 +588,41 @@ __DATA__
         <text x="{{leaf1-cx}}" y="{{=leaf1-cy + 10}}" font-size="24pt" transform="rotate(180 {{leaf1-cx}},{{leaf1-cy}})">{{value}}<tspan font-size="12pt">Ω</tspan></text>
         <text x="{{leaf2-cx}}" y="{{=leaf2-cy + 10}}" font-size="24pt">{{value}}<tspan font-size="12pt">Ω</tspan></text>
         <use x="{{=leaf0-cx - 15}}" y="{{=leaf0-cy - 15}}" xlink:href="#digit-Bk" />
+    </g>
+====================================================================== ENVELOPE SPECIAL color-key
+    <!-- color-key -->
+    <g id="color-key" class="color-key">
+        <text x="{{=leaf0-W + 150}}" y="{{=leaf0-cy - 15}}" font-size="12pt">digits</text>
+        <use x="0" y="0" transform="translate({{=leaf0-W + 5 + (25 * 0)}},{{=leaf0-cy - 10}}) scale(0.66)" xlink:href="#digit-Bk" />
+        <use x="0" y="0" transform="translate({{=leaf0-W + 5 + (25 * 1)}},{{=leaf0-cy - 10}}) scale(0.66)" xlink:href="#digit-Bn" />
+        <use x="0" y="0" transform="translate({{=leaf0-W + 5 + (25 * 2)}},{{=leaf0-cy - 10}}) scale(0.66)" xlink:href="#digit-Rd" />
+        <use x="0" y="0" transform="translate({{=leaf0-W + 5 + (25 * 3)}},{{=leaf0-cy - 10}}) scale(0.66)" xlink:href="#digit-Og" />
+        <use x="0" y="0" transform="translate({{=leaf0-W + 5 + (25 * 4)}},{{=leaf0-cy - 10}}) scale(0.66)" xlink:href="#digit-Yw" />
+        <use x="0" y="0" transform="translate({{=leaf0-W + 5 + (25 * 5)}},{{=leaf0-cy - 10}}) scale(0.66)" xlink:href="#digit-Gn" />
+        <use x="0" y="0" transform="translate({{=leaf0-W + 5 + (25 * 6)}},{{=leaf0-cy - 10}}) scale(0.66)" xlink:href="#digit-Bl" />
+        <use x="0" y="0" transform="translate({{=leaf0-W + 5 + (25 * 7)}},{{=leaf0-cy - 10}}) scale(0.66)" xlink:href="#digit-Vt" />
+        <use x="0" y="0" transform="translate({{=leaf0-W + 5 + (25 * 8)}},{{=leaf0-cy - 10}}) scale(0.66)" xlink:href="#digit-Gy" />
+        <use x="0" y="0" transform="translate({{=leaf0-W + 5 + (25 * 9)}},{{=leaf0-cy - 10}}) scale(0.66)" xlink:href="#digit-Wt" />
+        <text x="{{=leaf1-W + 150}}" y="{{=leaf1-cy - 15}}" font-size="12pt">multiplier</text>
+        <use x="0" y="0" transform="translate({{=leaf1-W + 5 + (25 * 0)}},{{=leaf1-cy - 10}}) scale(0.66)" xlink:href="#multiplier-Bk" />
+        <use x="0" y="0" transform="translate({{=leaf1-W + 5 + (25 * 1)}},{{=leaf1-cy - 10}}) scale(0.66)" xlink:href="#multiplier-Bn" />
+        <use x="0" y="0" transform="translate({{=leaf1-W + 5 + (25 * 2)}},{{=leaf1-cy - 10}}) scale(0.66)" xlink:href="#multiplier-Rd" />
+        <use x="0" y="0" transform="translate({{=leaf1-W + 5 + (25 * 3)}},{{=leaf1-cy - 10}}) scale(0.66)" xlink:href="#multiplier-Og" />
+        <use x="0" y="0" transform="translate({{=leaf1-W + 5 + (25 * 4)}},{{=leaf1-cy - 10}}) scale(0.66)" xlink:href="#multiplier-Yw" />
+        <use x="0" y="0" transform="translate({{=leaf1-W + 5 + (25 * 5)}},{{=leaf1-cy - 10}}) scale(0.66)" xlink:href="#multiplier-Gn" />
+        <use x="0" y="0" transform="translate({{=leaf1-W + 5 + (25 * 6)}},{{=leaf1-cy - 10}}) scale(0.66)" xlink:href="#multiplier-Bl" />
+        <use x="0" y="0" transform="translate({{=leaf1-W + 5 + (25 * 7)}},{{=leaf1-cy - 10}}) scale(0.66)" xlink:href="#multiplier-Vt" />
+        <use x="0" y="0" transform="translate({{=leaf1-W + 5 + (25 * 8)}},{{=leaf1-cy - 10}}) scale(0.66)" xlink:href="#multiplier-Gy" />
+        <use x="0" y="0" transform="translate({{=leaf1-W + 5 + (25 * 9)}},{{=leaf1-cy - 10}}) scale(0.66)" xlink:href="#multiplier-Wt" />
+        <use x="0" y="0" transform="translate({{=leaf1-W + 5 + (25 *10)}},{{=leaf1-cy - 10}}) scale(0.66)" xlink:href="#multiplier-Gd" />
+        <use x="0" y="0" transform="translate({{=leaf1-W + 5 + (25 *11)}},{{=leaf1-cy - 10}}) scale(0.66)" xlink:href="#multiplier-Sr" />
+        <text x="{{=leaf2-W + 150}}" y="{{=leaf2-cy - 15}}" font-size="12pt">tolerance</text>
+        <use x="0" y="0" transform="translate({{=leaf2-W + 5 + (25 * 1)}},{{=leaf2-cy - 10}}) scale(0.66)" xlink:href="#tolerance-Bn" />
+        <use x="0" y="0" transform="translate({{=leaf2-W + 5 + (25 * 2)}},{{=leaf2-cy - 10}}) scale(0.66)" xlink:href="#tolerance-Rd" />
+        <use x="0" y="0" transform="translate({{=leaf2-W + 5 + (25 * 5)}},{{=leaf2-cy - 10}}) scale(0.66)" xlink:href="#tolerance-Gn" />
+        <use x="0" y="0" transform="translate({{=leaf2-W + 5 + (25 * 6)}},{{=leaf2-cy - 10}}) scale(0.66)" xlink:href="#tolerance-Bl" />
+        <use x="0" y="0" transform="translate({{=leaf2-W + 5 + (25 *10)}},{{=leaf2-cy - 10}}) scale(0.66)" xlink:href="#tolerance-Gd" />
+        <use x="0" y="0" transform="translate({{=leaf2-W + 5 + (25 *11)}},{{=leaf2-cy - 10}}) scale(0.66)" xlink:href="#tolerance-Sr" />
     </g>
 ====================================================================== HBAR
         <symbol id="hbar-{{color}}"><rect class="bar {{color}}" x="0" y="0" width="30" height="5" rx="2" ry="2"/></symbol>
@@ -654,11 +695,10 @@ __DATA__
             rect.Wt { fill: #FFFFFF; stroke: #AAAAAA; }
             rect.Gd { fill: #E0D000; stroke: #AAAAAA; }
             rect.Sr { fill: #DDDDDD; stroke: #AAAAAA; }
-            symbol.Bk text { fill: #BBBBBB; stroke: none; }
-            symbol.Bn text { fill: #BBBBBB; stroke: none; }
-            symbol.Bl text { fill: #BBBBBB; stroke: none; }
+            symbol.Bk text { fill: #DDDDDD; stroke: none; }
+            symbol.Bn text { fill: #DDDDDD; stroke: none; }
+            symbol.Bl text { fill: #DDDDDD; stroke: none; }
             symbol.multiplier tspan { baseline-shift: 4pt; }
-            symbol.tolerance text { fill: #888888; }
         ]]></style>
 
 {{hbars}}
